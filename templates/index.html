@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CipherCanvas — Secure Image-Based Hiding</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="wrapper">
+    <header class="header">
+      <h1 class="logo">CipherCanvas</h1>
+      <p class="tagline">Secure image-based hiding using steganography</p>
+    </header>
+
+    <main class="main">
+      <section class="instructions">
+        <h2>How it works</h2>
+        <ul>
+          <li><strong>Hide Message:</strong> Upload an image, enter a secret message and password. Your message is encrypted with ChaCha20 and hidden in the image using LSB steganography. Download the compressed stego-image.</li>
+          <li><strong>Reveal Message:</strong> Upload a stego-image created with CipherCanvas and enter the same password to extract and decrypt the hidden message.</li>
+        </ul>
+      </section>
+
+      <div class="tabs">
+        <button type="button" class="tab active" data-tab="hide">Hide Message</button>
+        <button type="button" class="tab" data-tab="reveal">Reveal Message</button>
+      </div>
+
+      <section id="panel-hide" class="panel active">
+        <form id="form-hide" class="form" enctype="multipart/form-data">
+          <div class="field">
+            <label for="hide-image">Carrier image</label>
+            <input type="file" id="hide-image" name="image" accept="image/png,image/jpeg,image/jpg,image/bmp,image/gif" required />
+          </div>
+          <div class="field">
+            <label for="hide-message">Secret message</label>
+            <textarea id="hide-message" name="message" rows="4" placeholder="Enter the message to hide…" required></textarea>
+          </div>
+          <div class="field">
+            <label for="hide-password">Password</label>
+            <input type="password" id="hide-password" name="password" placeholder="Used to encrypt the message" required />
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-hide">Hide Message</button>
+        </form>
+        <p id="hide-status" class="status" aria-live="polite"></p>
+      </section>
+
+      <section id="panel-reveal" class="panel">
+        <form id="form-reveal" class="form" enctype="multipart/form-data">
+          <div class="field">
+            <label for="reveal-image">Stego-image</label>
+            <input type="file" id="reveal-image" name="image" accept="image/png,image/jpeg,image/jpg" required />
+          </div>
+          <div class="field">
+            <label for="reveal-password">Password</label>
+            <input type="password" id="reveal-password" name="password" placeholder="Same password used when hiding" required />
+          </div>
+          <button type="submit" class="btn btn-primary" id="btn-reveal">Reveal Message</button>
+        </form>
+        <p id="reveal-status" class="status" aria-live="polite"></p>
+        <div id="reveal-result" class="result-box" hidden>
+          <label>Extracted message</label>
+          <pre id="reveal-message"></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Messages are encrypted with ChaCha20 and hidden using LSB steganography. Output is lossless PNG.</p>
+    </footer>
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
