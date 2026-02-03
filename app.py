@@ -1,7 +1,4 @@
-"""
-CipherCanvas — Secure Image-Based Hiding Using Steganography.
-Flask backend: hide (encrypt + LSB embed + compress) and reveal (extract + decrypt).
-"""
+# flask app - /api/hide and /api/reveal
 
 import io
 import uuid
@@ -12,7 +9,7 @@ from steganography import hide_in_image, extract_from_image, open_image
 from compression import compress_image, decompress_image
 
 app = Flask(__name__)
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16MB max upload
 
 
 @app.route("/")
@@ -22,10 +19,6 @@ def index():
 
 @app.route("/api/hide", methods=["POST"])
 def hide():
-    """
-    Expects: image (file), message (form), password (form).
-    Returns: compressed stego-image (PNG) for download.
-    """
     if "image" not in request.files:
         return jsonify({"error": "No image file provided"}), 400
     if "message" not in request.form or "password" not in request.form:
@@ -70,10 +63,6 @@ def hide():
 
 @app.route("/api/reveal", methods=["POST"])
 def reveal():
-    """
-    Expects: image (file), password (form).
-    Returns: JSON with extracted and decrypted message.
-    """
     if "image" not in request.files:
         return jsonify({"error": "No image file provided"}), 400
     if "password" not in request.form:
